@@ -6,20 +6,20 @@ import numpy as np
 app = Flask(__name__)
 
 # Tạo thư mục uploads để lưu ảnh
-UPLOAD_FOLDER = 'uploads'
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+# UPLOAD_FOLDER = 'uploads'
+# if not os.path.exists(UPLOAD_FOLDER):
+#     os.makedirs(UPLOAD_FOLDER)
+# app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 @app.route("/")
 def hello_world():
     # employees = [{'id': 2, 'name': 'Ashley'}, {'id': 2, 'name': 'Kate'}, {'id': 3, 'name': 'Joe'}]
-    model = YOLO('best.pt')  # load a custom model
-    #
-    results = model('image/dataTest.jpg')  # predict on an image
-    names_dict = results[0].names
-    probs = results[0].probs.data.tolist()
+    # model = YOLO('best.pt')  # load a custom model
+    # #
+    # results = model('image/dataTest.jpg')  # predict on an image
+    # names_dict = results[0].names
+    # probs = results[0].probs.data.tolist()
     # print(np.argmax(probs))
 
     # print(names_dict)
@@ -38,11 +38,11 @@ def hello_world():
     #     "CayCoCanh": "Cây Có Cánh",
     #     "CayDaNgocMinhChau": "Cây Dạ Ngọc Minh Châu"
     # }
-    print(names_dict[np.argmax(probs)])
-    result_name = names_dict[np.argmax(probs)]
-    predict_result = {"name": result_name}
-    return jsonify(predict_result)
-
+    # print(names_dict[np.argmax(probs)])
+    # result_name = names_dict[np.argmax(probs)]
+    # predict_result = {"name": result_name}
+    # return jsonify(predict_result)
+    return "hello world"
 
 @app.route('/predict', methods=['POST'])
 def uploadImage():
