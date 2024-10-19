@@ -44,7 +44,7 @@ def hello_world():
     return jsonify(predict_result)
 
 
-@app.route('/upload', methods=['POST'])
+@app.route('/predict', methods=['POST'])
 def uploadImage():
     try:
         if 'file' not in request.files:
