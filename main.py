@@ -6,10 +6,10 @@ import numpy as np
 app = Flask(__name__)
 
 # Tạo thư mục uploads để lưu ảnh
-# UPLOAD_FOLDER = 'uploads'
-# if not os.path.exists(UPLOAD_FOLDER):
-#     os.makedirs(UPLOAD_FOLDER)
-# app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+UPLOAD_FOLDER = 'uploads'
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 @app.route("/")
@@ -59,6 +59,7 @@ def uploadImage():
             result = predict(destination)
             return result , 200
     except Exception as e:
+        print(e)
         return "Error in uploading file", 500
 
 def predict(path):
@@ -71,4 +72,4 @@ def predict(path):
     return jsonify(predict_result)
 
 if __name__ == '__main__':
-    app.run(debug=False, port=5555)
+    app.run(host ='0.0.0.0', debug=False, port=8000)
