@@ -14,38 +14,10 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.route("/")
 def hello_world():
-    # employees = [{'id': 2, 'name': 'Ashley'}, {'id': 2, 'name': 'Kate'}, {'id': 3, 'name': 'Joe'}]
-    # model = YOLO('best.pt')  # load a custom model
-    # #
-    # results = model('image/dataTest.jpg')  # predict on an image
-    # names_dict = results[0].names
-    # probs = results[0].probs.data.tolist()
-    # print(np.argmax(probs))
-
-    # print(names_dict)
-    # print(probs)
-    # categories = {
-    #     "CayTrauBa": "Cây Trầu Bà",
-    #     "CayLuoiHo": "Cây Lưỡi Hổ",
-    #     "CayKimTien": "Cây Kim Tiền",
-    #     "CayKimNgan": "Cây Kim Ngân",
-    #     "CayThuongXuan": "Cây Thường Xuân",
-    #     "CayThietMocLan": "Cây Thiết Mộc La ",
-    #     "CayVanNienThanh": "Cây Vạn Niên Thanh",
-    #     "CayPhuQuy": "Cây Phú Quý",
-    #     "CayLanY": "Cây Lan Ý",
-    #     "CayXuongRong": "Cây Xương Rồng",
-    #     "CayCoCanh": "Cây Có Cánh",
-    #     "CayDaNgocMinhChau": "Cây Dạ Ngọc Minh Châu"
-    # }
-    # print(names_dict[np.argmax(probs)])
-    # result_name = names_dict[np.argmax(probs)]
-    # predict_result = {"name": result_name}
-    # return jsonify(predict_result)
     return "hello world"
 
-@app.route('/plants/predict', methods=['POST'])
-def uploadImage():
+
+def uploadImage(path):
     try:
         if 'file' not in request.files:
             return "No file part", 400
@@ -56,36 +28,29 @@ def uploadImage():
             # print(os.path)
             destination = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
             file.save(destination)
-            result = predict('/plants/predict',destination)
-            return result , 200
+            result = predict(path, destination)
+            return result, 200
     except Exception as e:
         print(e)
         return "Error in uploading file", 500
+
+
+@app.route('/plants/predict', methods=['POST'])
+def uploadImagePlants():
+    return uploadImage('/plants/predict')
+
 
 @app.route('/deseases/predict', methods=['POST'])
 def uploadImageDeseases():
-    try:
-        if 'file' not in request.files:
-            return "No file part", 400
-        file = request.files['file']
-        if file.filename == '':
-            return "No selected file", 400
-        if file:
-            # print(os.path)
-            destination = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-            file.save(destination)
-            result = predict('/deseases/predict',destination)
-            return result , 200
-    except Exception as e:
-        print(e)
-        return "Error in uploading file", 500
+    return uploadImage('/deseases/predict')
 
-def predict(mode , path):
-    print("my mode ",mode)
+
+def predict(mode, path):
+    print("my mode ", mode)
     if mode == '/deseases/predict':
-        model = YOLO('best_deseases.pt')  # load a custom model
-    else :
-        model = YOLO('best.pt')  # load a custom model
+        model = YOLO('best_deseases.pt')  # load desease model
+    else:
+        model = YOLO('best.pt')  # load plant model
     results = model(path)  # predict on an image
     names_dict = results[0].names
     probs = results[0].probs.data.tolist()
@@ -93,5 +58,6 @@ def predict(mode , path):
     predict_result = {"name": result_name}
     return jsonify(predict_result)
 
+
 if __name__ == '__main__':
-    app.run(host ='0.0.0.0', debug=False, port=8000)
+    app.run(host='0.0.0.0', debug=False, port=8000)
