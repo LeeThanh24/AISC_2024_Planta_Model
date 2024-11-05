@@ -54,8 +54,14 @@ def predict(mode, path):
     results = model(path)  # predict on an image
     names_dict = results[0].names
     probs = results[0].probs.data.tolist()
+
+    maxIndex = np.argmax(probs)
+
+    relevant =[names_dict[probs.index(x)] for x in probs if x != probs[maxIndex]]
+
     result_name = names_dict[np.argmax(probs)]
-    predict_result = {"name": result_name}
+
+    predict_result = {"name": result_name, "relevant":relevant}
     return jsonify(predict_result)
 
 
